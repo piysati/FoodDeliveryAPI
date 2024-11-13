@@ -30,15 +30,6 @@ public class RestaurantServiceImpl implements RestaurantService{
         return this.restaurantRepository.findAll();
     }
 
-    @Override
-    public List<MenuItems> getRestaurantMenuByName(String restaurantName) {
-        return this.restaurantRepository.findMenuItemsByRestaurantName(restaurantName);
-    }
-
-    @Override
-    public List<MenuItems> searchMenuItems(String keyword, String cuisineType) {
-        return restaurantRepository.searchMenuItems(keyword, cuisineType);
-    }
 
 
 

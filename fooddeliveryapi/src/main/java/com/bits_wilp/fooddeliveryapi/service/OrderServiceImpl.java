@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<OrderDTO> getOrderHistory(Long customerId) {
-        List<Orders> ordersHistory = this.orderRepo.findByCustomerId(customerId);
+        List<Orders> ordersHistory = this.orderRepo.findByUserId(customerId);
         List<OrderDTO> orderHistoryDTO = ordersHistory.stream().map(or -> entityToDTO(or)).collect(Collectors.toList());
         return orderHistoryDTO;
 

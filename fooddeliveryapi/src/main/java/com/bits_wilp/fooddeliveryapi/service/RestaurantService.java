@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface RestaurantService {
     List<Restaurant> getAllRestaurants();
-    List<MenuItems> getRestaurantMenuByName(String restaurantName);
-    List<MenuItems> searchMenuItems(String keyword, String cuisineType);
 
     MenuItems addMenuItem(Long restaurantId, MenuItems menuItem);
     MenuItems updateMenuItem(Long restaurantId, Long menuItemId, MenuItems menuItem);

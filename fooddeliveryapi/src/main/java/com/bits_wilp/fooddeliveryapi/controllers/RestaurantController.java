@@ -3,20 +3,27 @@ package com.bits_wilp.fooddeliveryapi.controllers;
 import com.bits_wilp.fooddeliveryapi.entity.MenuItems;
 import com.bits_wilp.fooddeliveryapi.entity.Orders;
 import com.bits_wilp.fooddeliveryapi.entity.Restaurant;
+import com.bits_wilp.fooddeliveryapi.service.MenuItemService;
+import com.bits_wilp.fooddeliveryapi.service.MenuItemServiceImpl;
 import com.bits_wilp.fooddeliveryapi.service.RestaurantService;
+import com.bits_wilp.fooddeliveryapi.service.RestaurantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
     @Autowired
-    private RestaurantService restaurantService;
+    private RestaurantServiceImpl restaurantService;
+
+    @Autowired
+    private MenuItemServiceImpl menuItemService;
 
     @GetMapping("/")
     public ResponseEntity<List<Restaurant>> getAllRestaurants() {
@@ -25,16 +32,16 @@ public class RestaurantController {
     }
 
     @GetMapping("/{restaurantName}/menu")
-    public ResponseEntity<List<MenuItems>> getRestaurantMenu(@PathVariable String restaurantName) {
-        List<MenuItems> menu = restaurantService.getRestaurantMenuByName(restaurantName);
+    public ResponseEntity<?> getRestaurantMenu(@PathVariable String restaurantName) {
+        Optional<MenuItems> menu = menuItemService.getRestaurantMenuByName(restaurantName);
         return ResponseEntity.ok(menu);
     }
 
     @GetMapping("/menu/search")
-    public ResponseEntity<List<MenuItems>> searchMenuItems(
+    public ResponseEntity<?> searchMenuItems(
             @RequestParam String query,
             @RequestParam(required = false) String cuisine) {
-        List<MenuItems> menuItems = restaurantService.searchMenuItems(query, cuisine);
+        Optional<MenuItems> menuItems = menuItemService.searchMenuItems(query, cuisine);
         return ResponseEntity.ok(menuItems);
     }
 

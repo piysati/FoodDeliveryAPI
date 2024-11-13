@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customers")
 public class UserController {
-
+//localhost:9090/api/customers/regi
     @Autowired
     private UsersService usersService;
 

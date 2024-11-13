@@ -37,10 +37,12 @@ public class Restaurant {
 
     private String contactHour;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany
+            //(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<MenuItems> menuItems;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany
+            //(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Orders> orders;
 
 //    private String delivery_zone;
