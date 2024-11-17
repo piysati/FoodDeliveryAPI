@@ -5,6 +5,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalException {
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<?> userNotFoundException(UserNotFoundException ex){
+        String msg = ex.getMessage();
+        ResponseDTO resp = new ResponseDTO(msg, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ResponseDTO> resourceNotFoundException(ResourceNotFoundException ex){
         String msg = ex.getMessage();
@@ -23,18 +31,44 @@ public class GlobalException {
         return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ResourceDuplicateException.class)
-    public ResponseEntity<ResponseDTO> resourceDuplicateException(ResourceDuplicateException ex){
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ResponseEntity<?> passwordMismatchException(PasswordMismatchException ex){
         String msg = ex.getMessage();
-        ResponseDTO resp = new ResponseDTO(msg, HttpStatus.BAD_REQUEST);
+        ResponseDTO resp = new ResponseDTO(msg, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> basCredentialsException(BadCredentialsException ex){
+        String msg = ex.getMessage();
+        ResponseDTO resp = new ResponseDTO(msg, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
+    }
+
+    //ResourceDuplication
+    @ExceptionHandler({UserAlreadyExistsException.class, ResourceDuplicateException.class})
+    public ResponseEntity<?> userAlreadyExistsException(UserAlreadyExistsException ex){
+        String msg = ex.getMessage();
+        ResponseDTO resp = new ResponseDTO(msg, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(resp, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidJwtTokenException.class)
+    public ResponseEntity<?> invalidJwtTokenException(InvalidJwtTokenException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
         String msg = ex.getMessage();
         ResponseDTO resp = new ResponseDTO(msg, HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(resp, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<?> numberFormatException(NumberFormatException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -64,4 +98,5 @@ public class GlobalException {
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
 }

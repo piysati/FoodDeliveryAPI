@@ -5,10 +5,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Entity @Data
-@NoArgsConstructor @AllArgsConstructor
-@Getter
+@Entity @Getter
 @Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class MenuItems {
 
     @Id

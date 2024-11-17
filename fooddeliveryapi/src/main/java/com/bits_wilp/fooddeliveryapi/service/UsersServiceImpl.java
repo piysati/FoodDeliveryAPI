@@ -6,6 +6,7 @@ import com.bits_wilp.fooddeliveryapi.entity.Users;
 import com.bits_wilp.fooddeliveryapi.exceptions.ResourceDuplicateException;
 import com.bits_wilp.fooddeliveryapi.exceptions.ResourceNotFoundException;
 import com.bits_wilp.fooddeliveryapi.exceptions.UserNotFound;
+import com.bits_wilp.fooddeliveryapi.exceptions.UserNotFoundException;
 import com.bits_wilp.fooddeliveryapi.repository.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,19 @@ public class UsersServiceImpl implements UsersService{
         Users user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
         return entityToDTO(user);
+    }
+
+    @Override
+    public UserDTO getUserByEmail(String email) {
+
+        if (email.contains("@") && email.endsWith(".com")){
+            Users user = this.userRepo.findByEmail(email).orElseThrow(() ->
+                new UserNotFoundException("User with this email " + email + " not found"));
+
+            System.out.println(user.getName());
+            return entityToDTO(user);
+        }
+        return null;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.bits_wilp.fooddeliveryapi.dto;
 
 import lombok.*;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -9,7 +8,9 @@ import org.springframework.http.HttpStatus;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseDTO {
-    private String msg;
-    private HttpStatus statusCode;
+public class JwtResponse {
+
+    private String token;
+    private UserDTO userDto;
+
 }

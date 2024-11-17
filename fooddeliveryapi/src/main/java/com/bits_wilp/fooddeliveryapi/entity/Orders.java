@@ -6,8 +6,13 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data @Entity
-@NoArgsConstructor @AllArgsConstructor
+@Entity
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 public class Orders {
     //id, customer_id, restaurant_id, menu_items (list), status, delivery_person_id, total_price, order_date
     @Id
@@ -18,9 +23,13 @@ public class Orders {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    private Restaurant restaurant;
+    private String restaurantId;
+    private double totalPrice;
+    private LocalDateTime orderDateTime;
+
+//    @ManyToOne
+//    @JoinColumn(name = "restaurant_id", nullable = false)
+//    private Restaurant restaurant;
 
     @ManyToMany
     @JoinTable(
@@ -36,9 +45,7 @@ public class Orders {
     @JoinColumn(name = "delivery_person_id")
     private DeliveryPartner deliveryPartner;
 
-    private double totalPrice;
 
-    private LocalDateTime orderDateTime;
 
     // getters and setters
 }

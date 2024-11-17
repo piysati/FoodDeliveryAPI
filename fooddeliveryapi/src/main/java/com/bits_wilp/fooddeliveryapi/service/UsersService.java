@@ -2,8 +2,6 @@ package com.bits_wilp.fooddeliveryapi.service;
 
 import com.bits_wilp.fooddeliveryapi.dto.LoginDTO;
 import com.bits_wilp.fooddeliveryapi.dto.UserDTO;
-import com.bits_wilp.fooddeliveryapi.entity.Users;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,6 +11,7 @@ public interface UsersService {
     void loginUser(LoginDTO loginDTO);
     UserDTO updateUser(UserDTO userdto, Long userId);
     UserDTO getUserById(Long userId);
+    UserDTO getUserByEmail(String email);
     List<UserDTO> getAllUsers();
     //deactivateUSer
     void deleteUser(Long userId);

@@ -8,10 +8,12 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

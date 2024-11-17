@@ -1,12 +1,14 @@
 package com.bits_wilp.fooddeliveryapi.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
-@Data @Entity
+@Entity
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem {

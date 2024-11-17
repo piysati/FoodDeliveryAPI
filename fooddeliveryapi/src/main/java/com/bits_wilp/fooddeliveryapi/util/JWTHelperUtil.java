@@ -1,4 +1,4 @@
-package com.bits_wilp.fooddeliveryapi.utils;
+package com.bits_wilp.fooddeliveryapi.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -40,8 +40,6 @@ public class JWTHelperUtil {
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
-
-
 
     // Generate token for user
     public String generateToken(UserDetails userDetails) {

@@ -12,7 +12,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data @NoArgsConstructor @AllArgsConstructor @Getter @Setter
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Users implements UserDetails {
 

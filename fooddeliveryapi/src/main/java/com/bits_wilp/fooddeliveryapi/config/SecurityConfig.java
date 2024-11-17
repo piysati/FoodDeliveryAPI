@@ -1,100 +1,85 @@
 package com.bits_wilp.fooddeliveryapi.config;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.http.HttpServletRequest;
+import com.bits_wilp.fooddeliveryapi.util.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable().authorizeHttpRequests().anyRequest().authenticated().and()
-//                .httpBasic();
-//
-//        return http.build();
-//    }
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/api/customers/register", "/api/customers/login").permitAll() // Public endpoints
-//                .antMatchers("/api/admin/**").hasRole("ADMIN") // Only admin can access
-//                .antMatchers("/api/owners/**").hasRole("OWNER") // Only restaurant owners can access
-//                .antMatchers("/api/delivery/**").hasRole("DELIVERY_PERSONNEL") // Delivery personnel access
-//                .anyRequest().authenticated() // Other requests need authentication
-//                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Stateless session
-//
-//        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//    }
-//    @Autowired
-//    private CustomUserDetailsServiceImpl userDetailsService;
-//
-//    @Autowired
-//    private JwtAuthenticationFilter jwtAuthenticationFilter;
-//
-//    @Autowired
-//    private JWTAuthenticationEntryPoint authenticationEntryPointpoint;
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
+    @Autowired
+    private UserDetailsService userDetailsService;
+    @Lazy
+    @Autowired
+    private JwtAuthenticationFilter filter;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    private static final String[] PUBLIC_URL = {
+            "/server/**",
+            "/food-app/dev/**",
+            "/food-app/api/users/save/**",
+            "/food-app/api/auth/generate-token",
+    };
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
 //        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
-//        return builder.getAuthenticationManager();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//
-//        http.csrf(csrf -> csrf.disable())
-//                .authorizeRequests()
-//                .antMatchers("/api/customers/**").hasRole("CUSTOMER")
-//                .antMatchers("/api/restaurants/**").hasRole("RESTAURANT_OWNER")
-//                .antMatchers("/api/admin/**").hasRole("ADMIN")
-//                .anyRequest().authenticated();
-//                .requestMatchers("/test").authenticated()
-//                .requestMatchers("/auth/login").permitAll()
-//                .anyRequest().authenticated()
-//                .and().exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPointpoint))
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//
-//        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//        return http.build();
-//    }
+    }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        return daoAuthenticationProvider;
+    }
 
-//    @Override
-//    public boolean matches(HttpServletRequest request) {
-//        return false;
-//    }
-//
-//    @Override
-//    public List<Filter> getFilters() {
-//        return List.of();
-//    }
+    @Bean
+    public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
+        return http.cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth-> auth
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .requestMatchers(PUBLIC_URL).permitAll()
+                        .requestMatchers("/food-app/api/users/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/food-app/api/users/**").hasAuthority("NORMAL")
+                        .anyRequest().hasAuthority("NORMAL"))
+                .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .userDetailsService(userDetailsService)
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex-> ex.authenticationEntryPoint(authenticationEntryPoint))
+                .build();
+    }
 
-//        @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//    }
 }
 
