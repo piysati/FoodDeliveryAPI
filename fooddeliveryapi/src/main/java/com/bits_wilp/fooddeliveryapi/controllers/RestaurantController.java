@@ -25,9 +25,11 @@ public class RestaurantController {
     @Autowired
     private MenuItemServiceImpl menuItemService;
 
-    @GetMapping("/")
+    @GetMapping("/get")
     public ResponseEntity<List<Restaurant>> getAllRestaurants() {
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+        if(restaurants.isEmpty())
+            System.out.println("Null returned");
         return ResponseEntity.ok(restaurants);
     }
 

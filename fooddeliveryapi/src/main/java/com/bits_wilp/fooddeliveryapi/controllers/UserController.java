@@ -4,6 +4,9 @@ import com.bits_wilp.fooddeliveryapi.dto.LoginDTO;
 import com.bits_wilp.fooddeliveryapi.dto.UserDTO;
 import com.bits_wilp.fooddeliveryapi.service.UsersService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("food-delivery/api/users")
+@CrossOrigin("*")
 public class UserController {
 //localhost:9090/api/customers/regi
     @Autowired
     private UsersService usersService;
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping(value = "/register")
     public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody UserDTO userDTO) {

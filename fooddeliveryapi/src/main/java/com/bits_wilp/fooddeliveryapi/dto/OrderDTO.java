@@ -9,7 +9,7 @@ import java.util.List;
 public class OrderDTO {
 
     private Long id;
-    private Users user;
+    private Long userId;
     private Long restaurantId;
     private List<MenuItems> menuItems;
     private String status;  // Enum for status (PREPARING, OUT_FOR_DELIVERY, DELIVERED)

@@ -2,6 +2,7 @@ package com.bits_wilp.fooddeliveryapi.controllers;
 
 import com.bits_wilp.fooddeliveryapi.dto.UserDTO;
 import com.bits_wilp.fooddeliveryapi.service.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/food-delivery/api/admin")
+@RequiredArgsConstructor
+@CrossOrigin("*")
 public class AdminController {
 
     @Autowired
